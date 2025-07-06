@@ -1,0 +1,47 @@
+<div class="table-container" #tableContainer>
+  <nz-input-group [nzSuffix]="suffixIconSearch" nzSize="large">
+    <input type="text" nz-input placeholder="Search..." appSearch #searchEl (search)="search.emit($event)" />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <nz-icon nzType="search" />
+  </ng-template>
+  <nz-table [nzData]="tableData()"
+            [nzShowPagination]="false"
+            [nzScroll]="{ y: `${tableContainer.offsetHeight - 90}px` }"
+            appInfiniteScroll=".ant-table-body"
+            (infiniteScroll)="loadMore.emit()"
+            (nzQueryParams)="onQueryParamsChange($event)">
+    <thead>
+    <tr>
+      @for (column of tableColumns(); track column.field) {
+        <th [nzColumnKey]="column.field"
+            [nzSortFn]="column.sortable"
+            [nzFilters]="column.filterValues"
+            [nzFilterFn]="true"
+            [nzShowFilter]="!!column.filterValues.length">
+          {{ column.title }}
+        </th>
+      }
+    </tr>
+    </thead>
+    <tbody>
+      @for (data of tableData(); track data['id']) {
+        <tr>
+          @for (column of tableColumns(); track column.field) {
+            @switch (column.type) {
+              @case ('text') {
+                <td [innerHTML]="data[column.field] | highlight:searchEl.value"></td>
+              }
+              @case ('date') {
+                <td>{{ data[column.field] | date:'dd MMMM y'}}</td>
+              }
+              @case ('boolean') {
+                <td>{{ data[column.field] ? 'Yes' : 'No' }}</td>
+              }
+            }
+          }
+        </tr>
+      }
+    </tbody>
+  </nz-table>
+</div>

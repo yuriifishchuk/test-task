@@ -16,7 +16,22 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022"
+    "module": "ES2022",
+    "baseUrl": "src",
+    "paths": {
+      "@services/*": [
+        "app/common/services/*"
+      ],
+      "@models/*": [
+        "app/common/models/*"
+      ],
+      "@directives/*": [
+        "app/common/directives/*"
+      ],
+      "@pipes/*": [
+        "app/common/pipes/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
