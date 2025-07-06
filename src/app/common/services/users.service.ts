@@ -28,30 +28,30 @@ export class UsersService {
   applyFilters<T>(result: T[], filters: Filter[]): T[] {
     if (!filters || filters.length === 0) return result;
 
-    return result.filter((item: any) => {
+    return result.filter((item: T) => {
       return filters.every((filter: Filter) => {
         if (!filter.value || filter.value.length === 0) return true;
 
-        const itemValue = item[filter.field!];
+        const itemValue = (item as Record<string, unknown>)[filter.field!];
         if (itemValue == null) return false;
 
         return filter.value.some((value: string) => {
           if (value === 'NOT_ADULTS') {
-            const age = this.calculateAge(item.dateOfBirth);
+            const age = this.calculateAge(itemValue as string);
             return age < 18;
           }
 
           if (value === 'ADULTS') {
-            const age = this.calculateAge(item.dateOfBirth);
+            const age = this.calculateAge(itemValue as string);
             return age >= 18;
           }
 
           if (value === 'ACTIVE') {
-            return item.isActive;
+            return itemValue;
           }
 
           if (value === 'NOT_ACTIVE') {
-            return !item.isActive;
+            return !itemValue;
           }
 
           return String(itemValue).toLowerCase().includes(value.toLowerCase());
@@ -67,11 +67,11 @@ export class UsersService {
    */
   applySearchQuery<T>(result: T[], searchQuery: string): T[] {
     const query = searchQuery.toLowerCase();
-    return result.filter((item: any) => {
-      const fields = Object.keys(item);
+    return result.filter((item: T) => {
+      const fields = ['firstName', 'lastName'];
 
-      return fields.some((field: any) => {
-        const val = (item as any)[field];
+      return fields.some(field => {
+        const val = item[field as keyof T];
         if (val == null) return false;
         return String(val).toLowerCase().includes(query);
       });
@@ -84,9 +84,9 @@ export class UsersService {
    * @param sort
    */
   applySorting<T>(result: T[], sort: Sort): void {
-    result.sort((a: any, b: any) => {
-      const valA = a[sort!.field];
-      const valB = b[sort!.field];
+    result.sort((a: T, b: T) => {
+      const valA = a[sort!.field as keyof T];
+      const valB = b[sort!.field as keyof T];
       if (valA < valB) return sort!.direction === 'ascend' ? -1 : 1;
       if (valA > valB) return sort!.direction === 'ascend' ? 1 : -1;
       return 0;
