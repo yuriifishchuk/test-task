@@ -16,6 +16,7 @@
       @for (column of tableColumns(); track column.field) {
         <th [nzColumnKey]="column.field"
             [nzSortFn]="column.sortable"
+            [nzShowSort]="column.sortable"
             [nzFilters]="column.filterValues"
             [nzFilterFn]="true"
             [nzShowFilter]="!!column.filterValues.length">

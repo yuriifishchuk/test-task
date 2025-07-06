@@ -35,6 +35,13 @@ export class AppComponent implements OnInit {
       filterValues: []
     },
     {
+      type: 'text',
+      field: 'phone',
+      title: 'Phone Number',
+      sortable: false,
+      filterValues: []
+    },
+    {
       type: 'date',
       field: 'dateOfBirth',
       title: 'Date Of Birth',

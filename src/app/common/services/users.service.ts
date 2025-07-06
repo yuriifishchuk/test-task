@@ -68,7 +68,7 @@ export class UsersService {
   applySearchQuery<T>(result: T[], searchQuery: string): T[] {
     const query = searchQuery.toLowerCase();
     return result.filter((item: T) => {
-      const fields = ['firstName', 'lastName'];
+      const fields = ['firstName', 'lastName', 'phone'];
 
       return fields.some(field => {
         const val = item[field as keyof T];
